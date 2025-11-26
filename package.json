@@ -1,0 +1,23 @@
+{
+  "name": "pawfect-pets",
+  "version": "1.0.0",
+  "description": "Full-stack dog business platform",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "cd server && npm run dev",
+    "client:dev": "cd client && npm run dev",
+    "server:build": "cd server && npm run build",
+    "client:build": "cd client && npm run build",
+    "build": "npm run server:build && npm run client:build",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "test": "cd server && npm test",
+    "test:client": "cd client && npm test"
+  },
+  "keywords": ["pets", "dog", "services", "ecommerce"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
+
