@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { navbarStyles } from '../styles/Navbar.styles';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -14,29 +15,29 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-primary-600 text-white shadow-lg">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold hover:text-primary-200">
+    <nav className={navbarStyles.nav}>
+      <div className={navbarStyles.container}>
+        <div className={navbarStyles.flexContainer}>
+          <Link to="/" className={navbarStyles.logo}>
             🐾 Pawfect Pets
           </Link>
 
-          <div className="flex items-center space-x-6">
+          <div className={navbarStyles.navLinks}>
             <Link
               to="/"
-              className="hover:text-primary-200 transition-colors"
+              className={navbarStyles.navLink}
             >
               Home
             </Link>
             <Link
               to="/shop"
-              className="hover:text-primary-200 transition-colors"
+              className={navbarStyles.navLink}
             >
               Shop
             </Link>
             <Link
               to="/services"
-              className="hover:text-primary-200 transition-colors"
+              className={navbarStyles.navLink}
             >
               Services
             </Link>
@@ -44,7 +45,7 @@ const Navbar = () => {
             {user && (
               <Link
                 to="/dashboard"
-                className="hover:text-primary-200 transition-colors"
+                className={navbarStyles.navLink}
               >
                 Dashboard
               </Link>
@@ -53,7 +54,7 @@ const Navbar = () => {
             {user?.role === 'admin' && (
               <Link
                 to="/admin"
-                className="hover:text-primary-200 transition-colors"
+                className={navbarStyles.navLink}
               >
                 Admin
               </Link>
@@ -61,39 +62,39 @@ const Navbar = () => {
 
             <button
               onClick={openCart}
-              className="relative hover:text-primary-200 transition-colors text-white"
+              className={navbarStyles.cartButton}
               type="button"
             >
               {/* Updated cart trigger to open shared drawer instead of navigating away. */}
               🛒 Cart
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-secondary-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className={navbarStyles.cartBadge}>
                   {cartCount}
                 </span>
               )}
             </button>
 
             {user ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm">Hello, {user.username}</span>
+              <div className={navbarStyles.userSection}>
+                <span className={navbarStyles.userGreeting}>Hello, {user.username}</span>
                 <button
                   onClick={handleLogout}
-                  className="bg-primary-700 hover:bg-primary-800 px-4 py-2 rounded transition-colors"
+                  className={navbarStyles.logoutButton}
                 >
                   Logout
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-4">
+              <div className={navbarStyles.authLinks}>
                 <Link
                   to="/login"
-                  className="hover:text-primary-200 transition-colors"
+                  className={navbarStyles.navLink}
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-primary-700 hover:bg-primary-800 px-4 py-2 rounded transition-colors"
+                  className={navbarStyles.signUpButton}
                 >
                   Sign Up
                 </Link>

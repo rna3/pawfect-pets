@@ -1,5 +1,6 @@
 import { useCart } from '../context/CartContext';
 import { toast } from 'react-toastify';
+import { productCardStyles } from '../styles/ProductCard.styles';
 
 interface ProductCardProps {
   id: number;
@@ -28,31 +29,31 @@ const ProductCard = ({ id, name, description, price, image, stock }: ProductCard
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+    <div className={productCardStyles.card}>
       <img
         src={image}
         alt={name}
-        className="w-full h-48 object-cover"
+        className={productCardStyles.image}
       />
-      <div className="p-4">
-        <h3 className="text-xl font-semibold mb-2">{name}</h3>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{description}</p>
-        <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-primary-600">${price}</span>
+      <div className={productCardStyles.content}>
+        <h3 className={productCardStyles.title}>{name}</h3>
+        <p className={productCardStyles.description}>{description}</p>
+        <div className={productCardStyles.priceContainer}>
+          <span className={productCardStyles.price}>${price}</span>
           <button
             onClick={handleAddToCart}
             disabled={stock === 0}
-            className={`px-4 py-2 rounded ${
+            className={`${productCardStyles.buttonContainer} ${
               stock > 0
-                ? 'bg-primary-600 text-white hover:bg-primary-700'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            } transition-colors`}
+                ? productCardStyles.buttonActive
+                : productCardStyles.buttonDisabled
+            }`}
           >
             {stock > 0 ? 'Add to Cart' : 'Out of Stock'}
           </button>
         </div>
         {stock > 0 && (
-          <p className="text-sm text-gray-500 mt-2">In stock: {stock}</p>
+          <p className={productCardStyles.stockInfo}>In stock: {stock}</p>
         )}
       </div>
     </div>

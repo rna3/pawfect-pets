@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { registerStyles } from '../styles/Register.styles';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -31,61 +32,61 @@ const Register = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-3xl font-bold text-center mb-8">Sign Up</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <div className={registerStyles.container}>
+      <div className={registerStyles.card}>
+        <h2 className={registerStyles.title}>Sign Up</h2>
+        <form onSubmit={handleSubmit} className={registerStyles.form}>
           <div>
-            <label className="block text-sm font-medium mb-2">Username</label>
+            <label className={registerStyles.formField}>Username</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className={registerStyles.input}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
+            <label className={registerStyles.formField}>Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className={registerStyles.input}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Password</label>
+            <label className={registerStyles.formField}>Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className={registerStyles.input}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Confirm Password</label>
+            <label className={registerStyles.formField}>Confirm Password</label>
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className={registerStyles.input}
               required
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary-600 text-white py-2 rounded hover:bg-primary-700 disabled:bg-gray-400 transition-colors"
+            className={registerStyles.submitButton}
           >
             {loading ? 'Signing up...' : 'Sign Up'}
           </button>
         </form>
-        <p className="mt-6 text-center text-gray-600">
+        <p className={registerStyles.footer}>
           Already have an account?{' '}
-          <Link to="/login" className="text-primary-600 hover:text-primary-700 font-semibold">
+          <Link to="/login" className={registerStyles.link}>
             Login
           </Link>
         </p>

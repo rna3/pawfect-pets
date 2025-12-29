@@ -4,6 +4,8 @@ import ProductCard from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
+import { shopStyles } from '../styles/Shop.styles';
+import { commonStyles } from '../styles/common';
 
 interface Product {
   id: number;
@@ -50,20 +52,16 @@ const Shop = () => {
   const categories = ['all', ...new Set(products.map((p) => p.category))];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Shop</h1>
+    <div className={shopStyles.container}>
+      <h1 className={shopStyles.title}>Shop</h1>
 
       {/* Category Filter */}
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className={shopStyles.categoryFilter}>
         {categories.map((category) => (
           <button
             key={category}
             onClick={() => setCategoryFilter(category)}
-            className={`px-4 py-2 rounded ${
-              categoryFilter === category
-                ? 'bg-primary-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            } transition-colors`}
+            className={shopStyles.categoryButton(categoryFilter === category)}
           >
             {category.charAt(0).toUpperCase() + category.slice(1)}
           </button>
@@ -71,7 +69,7 @@ const Shop = () => {
       </div>
 
       {/* Cart Button */}
-      <div className="mb-6 flex justify-end">
+      <div className={shopStyles.cartButtonContainer}>
         <button
           onClick={() => {
             if (!user) {
@@ -80,7 +78,7 @@ const Shop = () => {
             // Trigger global cart drawer shared with the navbar.
             openCart();
           }}
-          className="bg-primary-600 text-white px-6 py-2 rounded hover:bg-primary-700 flex items-center space-x-2"
+          className={shopStyles.cartButton}
         >
           <span>🛒 Cart ({items.length})</span>
         </button>
@@ -88,11 +86,11 @@ const Shop = () => {
 
       {/* Products Grid */}
       {loading ? (
-        <div className="text-center">Loading...</div>
+        <div className={commonStyles.textLoading}>Loading...</div>
       ) : filteredProducts.length === 0 ? (
-        <div className="text-center text-gray-500">No products found</div>
+        <div className={commonStyles.textEmpty}>No products found</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className={shopStyles.productsGrid}>
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} {...product} />
           ))}

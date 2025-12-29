@@ -4,6 +4,8 @@ import { getProducts, getServices } from '../utils/api';
 import ProductCard from '../components/ProductCard';
 import ServiceCard from '../components/ServiceCard';
 import heroImage from '../assets/images/hero-image.jpg';
+import { homeStyles } from '../styles/Home.styles';
+import { inlineStyles, commonStyles } from '../styles/common';
 
 interface Product {
   id: number;
@@ -56,21 +58,19 @@ const Home = () => {
           3. Replace the backgroundImage value below with: `url(${heroImage})`
       */}
       <section
-        className="relative text-white py-20 bg-center bg-contain bg-no-repeat min-h-[500px]"
-        style={{
-          backgroundImage: `url(${heroImage})`,
-        }}
+        className={homeStyles.heroSection}
+        style={inlineStyles.heroBackground(heroImage)}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-400/40 via-gray-400/30 to-blue-500/40" />
-        <div className="relative container mx-auto px-4 text-center flex flex-col justify-between min-h-[500px] py-8">
+        <div className={homeStyles.heroOverlay} />
+        <div className={homeStyles.heroContainer}>
           {/* Added layered hero background to improve visual impact while keeping text legible. */}
-          <div className="-mt-5">
-            <h1 className="text-5xl font-bold mb-4">Welcome to Pawfect Pets</h1>
-            <p className="text-xl mb-8">
+          <div className={homeStyles.heroContent}>
+            <h1 className={homeStyles.heroTitle}>Welcome to Pawfect Pets</h1>
+            <p className={homeStyles.heroSubtitle}>
               Your one-stop shop for all your dog's needs. Quality products and services for happy, healthy pets.
             </p>
           </div>
-          <div className="flex justify-center space-x-4 pb-8">
+          <div className={homeStyles.heroButtons}>
             <Link
               to="/shop"
               className="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
@@ -88,7 +88,7 @@ const Home = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 bg-gray-50">
+      <section className={homeStyles.featuredSection}>
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">Featured Products</h2>
           {loading ? (
@@ -103,7 +103,7 @@ const Home = () => {
           <div className="text-center mt-8">
             <Link
               to="/shop"
-              className="text-primary-600 hover:text-primary-700 font-semibold"
+              className={commonStyles.linkPrimary}
             >
               View All Products →
             </Link>
@@ -112,7 +112,7 @@ const Home = () => {
       </section>
 
       {/* Featured Services */}
-      <section className="py-16">
+      <section className={homeStyles.featuredSectionAlt}>
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">Our Services</h2>
           {loading ? (
@@ -127,7 +127,7 @@ const Home = () => {
           <div className="text-center mt-8">
             <Link
               to="/services"
-              className="text-primary-600 hover:text-primary-700 font-semibold"
+              className={commonStyles.linkPrimary}
             >
               View All Services →
             </Link>
@@ -136,15 +136,15 @@ const Home = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="bg-primary-600 text-white py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-          <p className="text-xl mb-8">
+      <section className={homeStyles.ctaSection}>
+        <div className={homeStyles.ctaContainer}>
+          <h2 className={homeStyles.ctaTitle}>Ready to Get Started?</h2>
+          <p className={homeStyles.ctaText}>
             Join thousands of happy pet owners who trust Pawfect Pets
           </p>
           <Link
             to="/register"
-            className="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            className={commonStyles.buttonHeroWhite}
           >
             Sign Up Today
           </Link>

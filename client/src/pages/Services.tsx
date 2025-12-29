@@ -4,6 +4,8 @@ import { getServices, createBooking } from '../utils/api';
 import ServiceCard from '../components/ServiceCard';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
+import { servicesStyles } from '../styles/Services.styles';
+import { commonStyles } from '../styles/common';
 
 interface Service {
   id: number;
@@ -121,20 +123,16 @@ const Services = () => {
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Our Services</h1>
+    <div className={servicesStyles.container}>
+      <h1 className={servicesStyles.title}>Our Services</h1>
 
       {/* Category Filter */}
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className={servicesStyles.categoryFilter}>
         {categories.map((category) => (
           <button
             key={category}
             onClick={() => setCategoryFilter(category)}
-            className={`px-4 py-2 rounded ${
-              categoryFilter === category
-                ? 'bg-primary-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            } transition-colors`}
+            className={servicesStyles.categoryButton(categoryFilter === category)}
           >
             {category.charAt(0).toUpperCase() + category.slice(1)}
           </button>
@@ -143,11 +141,11 @@ const Services = () => {
 
       {/* Services Grid */}
       {loading ? (
-        <div className="text-center">Loading...</div>
+        <div className={commonStyles.textLoading}>Loading...</div>
       ) : filteredServices.length === 0 ? (
-        <div className="text-center text-gray-500">No services found</div>
+        <div className={commonStyles.textEmpty}>No services found</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={servicesStyles.servicesGrid}>
           {filteredServices.map((service) => (
             <ServiceCard key={service.id} {...service} />
           ))}
@@ -156,54 +154,54 @@ const Services = () => {
 
       {/* Booking Modal */}
       {showBookingModal && selectedService && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h2 className="text-2xl font-bold mb-4">Book {selectedService.name}</h2>
-            <div className="space-y-4">
+        <div className={servicesStyles.modalOverlay}>
+          <div className={servicesStyles.modalContent}>
+            <h2 className={servicesStyles.modalTitle}>Book {selectedService.name}</h2>
+            <div className={servicesStyles.formField}>
               <div>
-                <label className="block text-sm font-medium mb-1">Date *</label>
+                <label className={servicesStyles.label}>Date *</label>
                 <input
                   type="date"
                   value={bookingDate}
                   onChange={(e) => setBookingDate(e.target.value)}
                   min={today}
-                  className="w-full px-4 py-2 border rounded"
+                  className={servicesStyles.input}
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Time *</label>
+                <label className={servicesStyles.label}>Time *</label>
                 <input
                   type="time"
                   value={bookingTime}
                   onChange={(e) => setBookingTime(e.target.value)}
-                  className="w-full px-4 py-2 border rounded"
+                  className={servicesStyles.input}
                   required
                 />
               </div>
               {selectedService.category === 'boarding' && (
                 <div>
-                  <label className="block text-sm font-medium mb-1">End Date *</label>
+                  <label className={servicesStyles.label}>End Date *</label>
                   <input
                     type="date"
                     value={bookingEndDate}
                     onChange={(e) => setBookingEndDate(e.target.value)}
                     min={bookingDate || today}
-                    className="w-full px-4 py-2 border rounded"
+                    className={servicesStyles.input}
                     required
                   />
                 </div>
               )}
               <div>
-                <label className="block text-sm font-medium mb-1">Notes (optional)</label>
+                <label className={servicesStyles.label}>Notes (optional)</label>
                 <textarea
                   value={bookingNotes}
                   onChange={(e) => setBookingNotes(e.target.value)}
-                  className="w-full px-4 py-2 border rounded"
+                  className={servicesStyles.textarea}
                   rows={3}
                 />
               </div>
-              <div className="flex space-x-4">
+              <div className={servicesStyles.buttonGroup}>
                 <button
                   onClick={() => {
                     setShowBookingModal(false);
@@ -212,14 +210,14 @@ const Services = () => {
                     setBookingNotes('');
                     setBookingEndDate('');
                   }}
-                  className="flex-1 px-4 py-2 border rounded hover:bg-gray-100"
+                  className={servicesStyles.cancelButton}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSubmitBooking}
                   disabled={submitting}
-                  className="flex-1 px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 disabled:bg-gray-400"
+                  className={servicesStyles.submitButton}
                 >
                   {submitting ? 'Booking...' : 'Book Now'}
                 </button>

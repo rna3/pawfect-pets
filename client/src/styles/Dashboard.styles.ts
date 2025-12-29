@@ -1,0 +1,45 @@
+import { commonStyles } from './common';
+
+export const dashboardStyles = {
+  container: commonStyles.containerWithPadding,
+  title: commonStyles.heading1,
+  welcome: 'text-lg mb-8',
+  section: 'mb-12',
+  sectionTitle: commonStyles.heading3,
+  bookingsGrid: commonStyles.gridDashboard,
+  bookingCard: 'bg-white rounded-lg shadow p-4',
+  bookingTitle: 'font-semibold text-lg mb-2',
+  bookingText: 'text-gray-600',
+  statusBadge: (status: string) => 
+    `inline-block mt-2 px-2 py-1 rounded text-sm ${
+      status === 'confirmed' ? commonStyles.statusConfirmed : commonStyles.statusPending
+    }`,
+  actionButtons: 'mt-4 flex space-x-3',
+  editButton: 'px-3 py-1 bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors',
+  cancelButton: 'px-3 py-1 border border-red-500 text-red-600 rounded hover:bg-red-50 transition-colors',
+  ordersList: 'space-y-4',
+  orderCard: 'bg-white rounded-lg shadow p-6',
+  orderHeader: 'flex justify-between items-start mb-4',
+  orderId: 'font-semibold text-lg',
+  orderDate: 'text-gray-600',
+  orderTotal: 'text-xl font-bold',
+  orderStatus: `inline-block px-2 py-1 ${commonStyles.statusCompleted} rounded text-sm`,
+  orderItems: 'border-t pt-4',
+  itemsTitle: 'font-semibold mb-2',
+  itemsList: 'space-y-2',
+  itemRow: 'flex items-center space-x-4',
+  itemImage: 'w-16 h-16 object-cover rounded',
+  itemDetails: 'flex-1',
+  itemName: 'font-medium',
+  itemQuantity: 'text-gray-600',
+  itemPrice: 'font-semibold',
+  modalOverlay: commonStyles.modalOverlay,
+  modalContent: commonStyles.modalContentLarge,
+  modalTitle: 'text-2xl font-bold mb-4',
+  modalForm: 'space-y-4',
+  modalLabel: 'block text-sm font-medium mb-1',
+  modalButtons: 'mt-6 flex justify-end space-x-3',
+  modalCloseButton: commonStyles.buttonCancel,
+  modalSaveButton: 'px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 disabled:bg-gray-400',
+};
+

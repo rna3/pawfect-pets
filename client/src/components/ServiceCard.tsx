@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { serviceCardStyles } from '../styles/ServiceCard.styles';
 
 interface ServiceCardProps {
   id: number;
@@ -20,24 +21,24 @@ const ServiceCard = ({ id, name, description, price, duration, image, category }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+    <div className={serviceCardStyles.card}>
       <img
         src={image}
         alt={name}
-        className="w-full h-48 object-cover"
+        className={serviceCardStyles.image}
       />
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-semibold text-primary-600 uppercase">{category}</span>
-          <span className="text-sm text-gray-500">{formatDuration(duration)}</span>
+      <div className={serviceCardStyles.content}>
+        <div className={serviceCardStyles.header}>
+          <span className={serviceCardStyles.category}>{category}</span>
+          <span className={serviceCardStyles.duration}>{formatDuration(duration)}</span>
         </div>
-        <h3 className="text-xl font-semibold mb-2">{name}</h3>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{description}</p>
-        <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-primary-600">${price}</span>
+        <h3 className={serviceCardStyles.title}>{name}</h3>
+        <p className={serviceCardStyles.description}>{description}</p>
+        <div className={serviceCardStyles.footer}>
+          <span className={serviceCardStyles.price}>${price}</span>
           <Link
             to={`/services?book=${id}`}
-            className="px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors"
+            className={serviceCardStyles.bookButton}
           >
             Book Now
           </Link>
