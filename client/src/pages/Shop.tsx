@@ -6,16 +6,7 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import { shopStyles } from '../styles/Shop.styles';
 import { commonStyles } from '../styles/common';
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category: string;
-  stock: number;
-}
+import { Product } from '../types';
 
 const Shop = () => {
   const [products, setProducts] = useState<Product[]>([]);

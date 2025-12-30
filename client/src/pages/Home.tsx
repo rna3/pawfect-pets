@@ -6,25 +6,7 @@ import ServiceCard from '../components/ServiceCard';
 import heroImage from '../assets/images/hero-image.jpg';
 import { homeStyles } from '../styles/Home.styles';
 import { inlineStyles, commonStyles } from '../styles/common';
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  stock: number;
-}
-
-interface Service {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  duration: number;
-  image: string;
-  category: string;
-}
+import { Product, Service } from '../types';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);

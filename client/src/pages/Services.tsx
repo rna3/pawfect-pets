@@ -6,16 +6,9 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import { servicesStyles } from '../styles/Services.styles';
 import { commonStyles } from '../styles/common';
-
-interface Service {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  duration: number;
-  image: string;
-  category: string;
-}
+import { Service } from '../types';
+import { validateBooking } from '../utils/validation';
+import { getTodayISO } from '../utils/date';
 
 const Services = () => {
   const [services, setServices] = useState<Service[]>([]);
@@ -89,11 +82,15 @@ const Services = () => {
       return;
     }
 
-    if (
-      selectedService.category === 'boarding' &&
-      (!bookingEndDate || new Date(bookingEndDate) <= new Date(bookingDate))
-    ) {
-      toast.error('Boarding services require an end date after the start date.');
+    const validation = validateBooking(
+      bookingDate,
+      bookingTime,
+      selectedService.category,
+      bookingEndDate
+    );
+
+    if (!validation.isValid) {
+      toast.error(validation.error);
       return;
     }
 
@@ -119,8 +116,7 @@ const Services = () => {
     }
   };
 
-  // Get minimum date (today)
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayISO();
 
   return (
     <div className={servicesStyles.container}>

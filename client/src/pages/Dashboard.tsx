@@ -4,37 +4,9 @@ import { getOrders, getBookings, updateBooking, cancelBooking } from '../utils/a
 import { useAuth } from '../context/AuthContext';
 import { dashboardStyles } from '../styles/Dashboard.styles';
 import { commonStyles } from '../styles/common';
-
-interface Order {
-  id: number;
-  total: number;
-  status: string;
-  createdAt: string;
-  items: Array<{
-    id: number;
-    quantity: number;
-    price: number;
-    product: {
-      id: number;
-      name: string;
-      image: string;
-    };
-  }>;
-}
-
-interface Booking {
-  id: number;
-  date: string;
-  time: string;
-  endDate?: string | null;
-  status: string;
-  service: {
-    id: number;
-    name: string;
-    price: number;
-    category: string;
-  };
-}
+import { Order, Booking } from '../types';
+import { formatDate, toInputDate } from '../utils/date';
+import { handleApiError, handleApiSuccess } from '../utils/errorHandler';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -68,23 +40,6 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  // Added helper to keep ISO strings consistent between server data and date inputs.
-  const toInputDate = (dateString: string | null | undefined) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    if (Number.isNaN(date.getTime())) {
-      return '';
-    }
-    return date.toISOString().split('T')[0];
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
 
   const upcomingBookings = bookings.filter((b) => {
     const bookingDate = new Date(b.date);
@@ -149,11 +104,11 @@ const Dashboard = () => {
         prev.map((booking) => (booking.id === updated.id ? { ...booking, ...updated } : booking))
       );
 
-      toast.success('Appointment updated successfully.');
+      handleApiSuccess('Appointment updated successfully.');
       setIsEditModalOpen(false);
       setEditingBooking(null);
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to update appointment.');
+      handleApiError(error, 'Failed to update appointment.');
     } finally {
       setSavingEdit(false);
     }
@@ -167,9 +122,9 @@ const Dashboard = () => {
           booking.id === bookingId ? { ...booking, status: 'cancelled' } : booking
         )
       );
-      toast.success('Appointment cancelled.');
+      handleApiSuccess('Appointment cancelled.');
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to cancel appointment.');
+      handleApiError(error, 'Failed to cancel appointment.');
     }
   };
 

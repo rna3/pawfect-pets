@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { registerStyles } from '../styles/Register.styles';
+import { validatePasswordMatch } from '../utils/validation';
+import { toast } from 'react-toastify';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -15,8 +17,8 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (password !== confirmPassword) {
-      alert('Passwords do not match');
+    if (!validatePasswordMatch(password, confirmPassword)) {
+      toast.error('Passwords do not match');
       return;
     }
 

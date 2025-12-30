@@ -1,24 +1,11 @@
 import { Link } from 'react-router-dom';
 import { serviceCardStyles } from '../styles/ServiceCard.styles';
+import { Service } from '../types';
+import { formatDuration } from '../utils/date';
 
-interface ServiceCardProps {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  duration: number;
-  image: string;
-  category: string;
-}
+interface ServiceCardProps extends Service {}
 
 const ServiceCard = ({ id, name, description, price, duration, image, category }: ServiceCardProps) => {
-  const formatDuration = (minutes: number) => {
-    if (minutes < 60) return `${minutes} minutes`;
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (mins === 0) return `${hours} hour${hours > 1 ? 's' : ''}`;
-    return `${hours}h ${mins}m`;
-  };
 
   return (
     <div className={serviceCardStyles.card}>

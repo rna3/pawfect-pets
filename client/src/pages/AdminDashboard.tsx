@@ -3,26 +3,8 @@ import { getProducts, getServices, createProduct, updateProduct, deleteProduct, 
 import { toast } from 'react-toastify';
 import { adminDashboardStyles } from '../styles/AdminDashboard.styles';
 import { commonStyles } from '../styles/common';
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category: string;
-  stock: number;
-}
-
-interface Service {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  duration: number;
-  image: string;
-  category: string;
-}
+import { Product, Service, CreateProductRequest, CreateServiceRequest } from '../types';
+import { handleApiError, handleApiSuccess } from '../utils/errorHandler';
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -32,7 +14,7 @@ const AdminDashboard = () => {
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editingService, setEditingService] = useState<Service | null>(null);
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<CreateProductRequest | CreateServiceRequest | {}>({});
 
   useEffect(() => {
     fetchData();
@@ -57,17 +39,17 @@ const AdminDashboard = () => {
     try {
       if (editingProduct) {
         await updateProduct(editingProduct.id, formData);
-        toast.success('Product updated successfully');
+        handleApiSuccess('Product updated successfully');
       } else {
-        await createProduct(formData);
-        toast.success('Product created successfully');
+        await createProduct(formData as CreateProductRequest);
+        handleApiSuccess('Product created successfully');
       }
       setShowProductModal(false);
       setEditingProduct(null);
       setFormData({});
       fetchData();
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to save product');
+      handleApiError(error, 'Failed to save product');
     }
   };
 
@@ -75,18 +57,18 @@ const AdminDashboard = () => {
     e.preventDefault();
     try {
       if (editingService) {
-        await updateService(editingService.id, formData);
-        toast.success('Service updated successfully');
+        await updateService(editingService.id, formData as CreateServiceRequest);
+        handleApiSuccess('Service updated successfully');
       } else {
-        await createService(formData);
-        toast.success('Service created successfully');
+        await createService(formData as CreateServiceRequest);
+        handleApiSuccess('Service created successfully');
       }
       setShowServiceModal(false);
       setEditingService(null);
       setFormData({});
       fetchData();
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to save service');
+      handleApiError(error, 'Failed to save service');
     }
   };
 
@@ -94,10 +76,10 @@ const AdminDashboard = () => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
       await deleteProduct(id);
-      toast.success('Product deleted successfully');
+      handleApiSuccess('Product deleted successfully');
       fetchData();
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to delete product');
+      handleApiError(error, 'Failed to delete product');
     }
   };
 
@@ -105,10 +87,10 @@ const AdminDashboard = () => {
     if (!window.confirm('Are you sure you want to delete this service?')) return;
     try {
       await deleteService(id);
-      toast.success('Service deleted successfully');
+      handleApiSuccess('Service deleted successfully');
       fetchData();
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to delete service');
+      handleApiError(error, 'Failed to delete service');
     }
   };
 
