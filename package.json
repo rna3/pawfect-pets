@@ -13,11 +13,18 @@
     "test": "cd server && npm test",
     "test:client": "cd client && npm test"
   },
-  "keywords": ["pets", "dog", "services", "ecommerce"],
+  "keywords": [
+    "pets",
+    "dog",
+    "services",
+    "ecommerce"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "openai": "^6.16.0"
   }
 }
-
