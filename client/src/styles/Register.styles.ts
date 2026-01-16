@@ -12,3 +12,4 @@ export const registerStyles = {
   link: commonStyles.linkPrimary,
 };
 
+

@@ -10,3 +10,4 @@ export const footerStyles = {
   divider: 'border-t border-gray-700 mt-8 pt-8 text-center text-gray-400',
 };
 
+

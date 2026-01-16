@@ -51,3 +51,4 @@ export const validateEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
+

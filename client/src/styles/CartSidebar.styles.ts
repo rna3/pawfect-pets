@@ -27,3 +27,4 @@ export const cartSidebarStyles = {
   checkoutButton: 'w-full bg-primary-600 text-white py-2 rounded hover:bg-primary-700 disabled:bg-gray-400',
 };
 
+

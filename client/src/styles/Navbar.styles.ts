@@ -16,3 +16,4 @@ export const navbarStyles = {
   signUpButton: 'bg-primary-700 hover:bg-primary-800 px-4 py-2 rounded transition-colors',
 };
 
+
