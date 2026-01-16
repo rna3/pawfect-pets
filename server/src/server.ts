@@ -9,6 +9,7 @@ import productRoutes from './routes/products';
 import serviceRoutes from './routes/services';
 import orderRoutes from './routes/orders';
 import bookingRoutes from './routes/bookings';
+import trainingGuideRoutes from './routes/trainingGuide';
 
 // Import models to establish relationships
 import './models';
@@ -32,6 +33,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/training-guide', trainingGuideRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -12,6 +12,8 @@ import {
   CreateBookingRequest,
   UpdateBookingRequest,
   CreateOrderRequest,
+  TrainingGuideRequest,
+  TrainingGuideResponse,
 } from '../types';
 import { STORAGE_KEYS } from '../constants';
 
@@ -91,3 +93,8 @@ export const updateService = (
 export const deleteService = (id: number): Promise<AxiosResponse<void>> =>
   api.delete(`/services/${id}`);
 
+// Training Guide API
+export const generateTrainingGuide = (
+  data: TrainingGuideRequest
+): Promise<AxiosResponse<TrainingGuideResponse>> =>
+  api.post('/training-guide', data);
