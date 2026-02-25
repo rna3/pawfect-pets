@@ -35,6 +35,12 @@ const Navbar = () => {
             >
               Services
             </Link>
+            <Link
+              to="/training-guide"
+              className={navbarStyles.navLink}
+            >
+              AI Training Guide
+            </Link>
 
             {user && (
               <Link

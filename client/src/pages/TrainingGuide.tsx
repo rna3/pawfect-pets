@@ -9,6 +9,44 @@ import {
   ExperienceLevel,
 } from '../types';
 
+// Dropdown options for quick selection
+const AGE_OPTIONS = [
+  { value: 3, label: '3 months' },
+  { value: 6, label: '6 months' },
+  { value: 9, label: '9 months' },
+  { value: 12, label: '1 year' },
+  { value: 18, label: '18 months' },
+  { value: 24, label: '2 years' },
+  { value: 36, label: '3 years' },
+  { value: 48, label: '4 years' },
+  { value: 60, label: '5 years' },
+  { value: 84, label: '7 years' },
+  { value: 120, label: '10+ years' },
+];
+
+const BREED_OPTIONS = [
+  'Labrador Retriever', 'Golden Retriever', 'German Shepherd', 'French Bulldog',
+  'Bulldog', 'Poodle', 'Beagle', 'Rottweiler', 'Yorkshire Terrier', 'Boxer',
+  'Dachshund', 'Shih Tzu', 'Australian Shepherd', 'Siberian Husky', 'Cavalier King Charles Spaniel',
+  'Doberman Pinscher', 'Miniature Schnauzer', 'Pomeranian', 'Chihuahua', 'Maltese',
+  'Cocker Spaniel', 'Border Collie', 'Boston Terrier', 'Havanese', 'Shetland Sheepdog',
+  'Mixed breed', 'Other',
+];
+
+const TRAINING_GOAL_OPTIONS = [
+  'Sit', 'Stay', 'Come when called', 'Loose leash walking', 'Crate training',
+  'Potty training', 'Leave it', 'Drop it', 'Heel', 'Down', 'Recall (off-leash)',
+  'Not jumping on people', 'Settle / calm behavior', 'Place command', 'Wait at doors',
+  'Basic obedience', 'Trick training', 'Other',
+];
+
+const BEHAVIOR_ISSUE_OPTIONS = [
+  'Jumping on people', 'Pulling on leash', 'Barking', 'Chewing', 'Separation anxiety',
+  'Digging', 'Counter surfing', 'Nipping / mouthing', 'Reactivity to other dogs',
+  'Reactivity to people', 'Fear or shyness', 'Resource guarding', 'House soiling',
+  'None', 'Other',
+];
+
 const TrainingGuide = () => {
   const [formData, setFormData] = useState<Partial<PetProfile>>({
     name: '',
@@ -21,8 +59,10 @@ const TrainingGuide = () => {
     behaviorIssues: [],
     healthNotes: '',
   });
-  const [currentGoal, setCurrentGoal] = useState('');
-  const [currentBehaviorIssue, setCurrentBehaviorIssue] = useState('');
+  const [selectedBreedDropdown, setSelectedBreedDropdown] = useState<string>('');
+  const [breedOtherText, setBreedOtherText] = useState('');
+  const [selectedGoal, setSelectedGoal] = useState('');
+  const [selectedBehaviorIssue, setSelectedBehaviorIssue] = useState('');
   const [loading, setLoading] = useState(false);
   const [guide, setGuide] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -34,13 +74,30 @@ const TrainingGuide = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleBreedChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelectedBreedDropdown(value);
+    if (value === 'Other') {
+      setFormData((prev) => ({ ...prev, breed: breedOtherText.trim() || undefined }));
+    } else {
+      setFormData((prev) => ({ ...prev, breed: value || undefined }));
+      setBreedOtherText('');
+    }
+  };
+
+  const handleBreedOtherChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setBreedOtherText(value);
+    setFormData((prev) => ({ ...prev, breed: value.trim() || undefined }));
+  };
+
   const handleAddGoal = () => {
-    if (currentGoal.trim() && !formData.trainingGoals?.includes(currentGoal.trim())) {
+    if (selectedGoal && !formData.trainingGoals?.includes(selectedGoal)) {
       setFormData((prev) => ({
         ...prev,
-        trainingGoals: [...(prev.trainingGoals || []), currentGoal.trim()],
+        trainingGoals: [...(prev.trainingGoals || []), selectedGoal],
       }));
-      setCurrentGoal('');
+      setSelectedGoal('');
     }
   };
 
@@ -52,16 +109,15 @@ const TrainingGuide = () => {
   };
 
   const handleAddBehaviorIssue = () => {
-    if (
-      currentBehaviorIssue.trim() &&
-      !formData.behaviorIssues?.includes(currentBehaviorIssue.trim())
-    ) {
+    if (!selectedBehaviorIssue) return;
+    const issue = selectedBehaviorIssue === 'None' ? '' : selectedBehaviorIssue;
+    if (issue && !formData.behaviorIssues?.includes(issue)) {
       setFormData((prev) => ({
         ...prev,
-        behaviorIssues: [...(prev.behaviorIssues || []), currentBehaviorIssue.trim()],
+        behaviorIssues: [...(prev.behaviorIssues || []), issue],
       }));
-      setCurrentBehaviorIssue('');
     }
+    setSelectedBehaviorIssue('');
   };
 
   const handleRemoveBehaviorIssue = (issue: string) => {
@@ -137,31 +193,43 @@ const TrainingGuide = () => {
             {/* Age */}
             <div>
               <label className={trainingGuideStyles.label}>
-                Age (months) <span className="text-red-500">*</span>
+                Age <span className="text-red-500">*</span>
               </label>
-              <input
-                type="number"
+              <select
                 name="ageMonths"
                 value={formData.ageMonths}
                 onChange={handleInputChange}
-                min="1"
-                max="240"
-                className={trainingGuideStyles.input}
+                className={trainingGuideStyles.select}
                 required
-              />
+              >
+                {AGE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
             </div>
 
             {/* Breed */}
             <div>
               <label className={trainingGuideStyles.label}>Breed (optional)</label>
-              <input
-                type="text"
-                name="breed"
-                value={formData.breed}
-                onChange={handleInputChange}
-                className={trainingGuideStyles.input}
-                placeholder="e.g., Golden Retriever"
-              />
+              <select
+                value={selectedBreedDropdown}
+                onChange={handleBreedChange}
+                className={trainingGuideStyles.select}
+              >
+                <option value="">Select breed</option>
+                {BREED_OPTIONS.map((b) => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+              {selectedBreedDropdown === 'Other' && (
+                <input
+                  type="text"
+                  value={breedOtherText}
+                  onChange={handleBreedOtherChange}
+                  className={`${trainingGuideStyles.input} mt-2`}
+                  placeholder="Specify breed"
+                />
+              )}
             </div>
 
             {/* Energy Level */}
@@ -221,22 +289,20 @@ const TrainingGuide = () => {
             {/* Training Goals */}
             <div className={trainingGuideStyles.fullWidth}>
               <label className={trainingGuideStyles.label}>
-                Training Goals <span className="text-red-500">*</span>
+                What do you want to work on? <span className="text-red-500">*</span>
               </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={currentGoal}
-                  onChange={(e) => setCurrentGoal(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleAddGoal();
-                    }
-                  }}
-                  className={trainingGuideStyles.goalsInput}
-                  placeholder="e.g., Sit, Stay, Come when called"
-                />
+              <div className="flex gap-2 flex-wrap items-center">
+                <select
+                  value={selectedGoal}
+                  onChange={(e) => setSelectedGoal(e.target.value)}
+                  className={trainingGuideStyles.select}
+                  style={{ minWidth: '200px' }}
+                >
+                  <option value="">Select a goal to add</option>
+                  {TRAINING_GOAL_OPTIONS.map((g) => (
+                    <option key={g} value={g}>{g}</option>
+                  ))}
+                </select>
                 <button
                   type="button"
                   onClick={handleAddGoal}
@@ -266,22 +332,20 @@ const TrainingGuide = () => {
             {/* Behavior Issues */}
             <div className={trainingGuideStyles.fullWidth}>
               <label className={trainingGuideStyles.label}>
-                Behavior Issues (optional)
+                Behavior issues to address (optional)
               </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={currentBehaviorIssue}
-                  onChange={(e) => setCurrentBehaviorIssue(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleAddBehaviorIssue();
-                    }
-                  }}
-                  className={trainingGuideStyles.goalsInput}
-                  placeholder="e.g., Jumping on people, Pulling on leash"
-                />
+              <div className="flex gap-2 flex-wrap items-center">
+                <select
+                  value={selectedBehaviorIssue}
+                  onChange={(e) => setSelectedBehaviorIssue(e.target.value)}
+                  className={trainingGuideStyles.select}
+                  style={{ minWidth: '200px' }}
+                >
+                  <option value="">Select an issue to add</option>
+                  {BEHAVIOR_ISSUE_OPTIONS.map((b) => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
                 <button
                   type="button"
                   onClick={handleAddBehaviorIssue}
@@ -308,10 +372,10 @@ const TrainingGuide = () => {
               )}
             </div>
 
-            {/* Health Notes */}
+            {/* Additional details for the AI */}
             <div className={trainingGuideStyles.fullWidth}>
               <label className={trainingGuideStyles.label}>
-                Health Notes (optional)
+                Additional details (optional)
               </label>
               <textarea
                 name="healthNotes"
@@ -319,7 +383,7 @@ const TrainingGuide = () => {
                 onChange={handleInputChange}
                 className={trainingGuideStyles.textarea}
                 rows={3}
-                placeholder="Any health concerns or physical limitations we should consider..."
+                placeholder="Health concerns, physical limitations, or any other context you want the AI to consider..."
               />
             </div>
           </div>
