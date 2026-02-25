@@ -8,14 +8,13 @@ const Footer = () => {
           <div>
             <h3 className={footerStyles.sectionTitle}>🐾 Pawfect Pets</h3>
             <p className={footerStyles.text}>
-              Your one-stop shop for all your dog's needs. Quality products and services for happy, healthy pets.
+              Your one-stop shop for all your dog's needs. Quality services for happy, healthy pets.
             </p>
           </div>
           <div>
             <h4 className={footerStyles.sectionSubtitle}>Quick Links</h4>
             <ul className={footerStyles.linkList}>
               <li><a href="/" className={footerStyles.link}>Home</a></li>
-              <li><a href="/shop" className={footerStyles.link}>Shop</a></li>
               <li><a href="/services" className={footerStyles.link}>Services</a></li>
             </ul>
           </div>

@@ -49,7 +49,7 @@ router.post(
     body('description').trim().notEmpty().withMessage('Description is required'),
     body('price').isFloat({ min: 0 }).withMessage('Price must be a positive number'),
     body('duration').isInt({ min: 1 }).withMessage('Duration must be a positive integer'),
-    body('category').isIn(['walking', 'boarding', 'training', 'grooming', 'other']).withMessage('Invalid category'),
+    body('category').isIn(['walking', 'boarding', 'training', 'grooming', 'pet_sitting']).withMessage('Invalid category'),
   ],
   async (req: AuthRequest, res: Response): Promise<void> => {
     try {

@@ -124,7 +124,7 @@ const seedDatabase = async () => {
         price: 40.00,
         duration: 120,
         image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400',
-        category: 'other',
+        category: 'pet_sitting',
       },
     ]);
     console.log(`Created ${services.length} services.`);

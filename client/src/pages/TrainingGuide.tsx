@@ -340,8 +340,13 @@ const TrainingGuide = () => {
         </form>
       ) : (
         <div className={trainingGuideStyles.guideContainer}>
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Your Personalized Training Guide</h2>
+            <p className="text-gray-600">Tailored specifically for {formData.name}</p>
+          </div>
+
           <div className={trainingGuideStyles.disclaimer}>
-            <h3 className={trainingGuideStyles.disclaimerTitle}>Important Disclaimer</h3>
+            <h3 className={trainingGuideStyles.disclaimerTitle}>⚠️ Important Disclaimer</h3>
             <p className={trainingGuideStyles.disclaimerText}>
               This training guide is for informational purposes only and does not replace
               professional dog training or veterinary care. Always consult with a certified
@@ -356,62 +361,177 @@ const TrainingGuide = () => {
               const lines = guide.split('\n');
               const elements: JSX.Element[] = [];
               let currentList: string[] = [];
+              let currentNumberedList: string[] = [];
               let listKey = 0;
+              let inParagraph = false;
+              let paragraphLines: string[] = [];
 
               const flushList = () => {
                 if (currentList.length > 0) {
                   elements.push(
-                    <ul key={`list-${listKey++}`} className="list-disc ml-6 mb-4 space-y-1">
-                      {currentList.map((item, idx) => (
-                        <li key={idx}>{item}</li>
-                      ))}
+                    <ul key={`list-${listKey++}`} className="list-disc ml-6 mb-4 space-y-2 text-gray-700">
+                      {currentList.map((item, idx) => {
+                        const processedItem = processInlineFormatting(item);
+                        return <li key={idx} className="leading-relaxed">{processedItem}</li>;
+                      })}
                     </ul>
                   );
                   currentList = [];
                 }
               };
 
-              lines.forEach((line, index) => {
-                if (line.startsWith('## ')) {
-                  flushList();
+              const flushNumberedList = () => {
+                if (currentNumberedList.length > 0) {
                   elements.push(
-                    <h2 key={index} className="text-2xl font-bold mt-6 mb-3">
-                      {line.substring(3)}
-                    </h2>
+                    <ol key={`numbered-${listKey++}`} className="list-decimal ml-6 mb-4 space-y-2 text-gray-700">
+                      {currentNumberedList.map((item, idx) => {
+                        const processedItem = processInlineFormatting(item);
+                        return <li key={idx} className="leading-relaxed">{processedItem}</li>;
+                      })}
+                    </ol>
                   );
-                } else if (line.startsWith('### ')) {
+                  currentNumberedList = [];
+                }
+              };
+
+              const flushParagraph = () => {
+                if (paragraphLines.length > 0) {
+                  const paragraphText = paragraphLines.join(' ').trim();
+                  if (paragraphText) {
+                    const processed = processInlineFormatting(paragraphText);
+                    elements.push(
+                      <p key={`para-${listKey++}`} className="mb-4 leading-7 text-gray-700">
+                        {processed}
+                      </p>
+                    );
+                  }
+                  paragraphLines = [];
+                  inParagraph = false;
+                }
+              };
+
+              const processInlineFormatting = (text: string): JSX.Element[] => {
+                // Handle bold (**text**), italic (*text*), and combinations
+                const parts: JSX.Element[] = [];
+                let currentIndex = 0;
+                
+                // Match bold (**text**), italic (*text*), and bold+italic (***text***)
+                const regex = /(\*\*\*.*?\*\*\*|\*\*.*?\*\*|\*.*?\*)/g;
+                let match;
+                let lastIndex = 0;
+
+                while ((match = regex.exec(text)) !== null) {
+                  // Add text before the match
+                  if (match.index > lastIndex) {
+                    parts.push(<span key={`text-${currentIndex++}`}>{text.substring(lastIndex, match.index)}</span>);
+                  }
+
+                  const matchedText = match[0];
+                  if (matchedText.startsWith('***') && matchedText.endsWith('***')) {
+                    // Bold and italic
+                    const content = matchedText.substring(3, matchedText.length - 3);
+                    parts.push(<strong key={`bold-italic-${currentIndex++}`}><em>{content}</em></strong>);
+                  } else if (matchedText.startsWith('**') && matchedText.endsWith('**')) {
+                    // Bold
+                    const content = matchedText.substring(2, matchedText.length - 2);
+                    parts.push(<strong key={`bold-${currentIndex++}`} className="font-semibold text-gray-900">{content}</strong>);
+                  } else if (matchedText.startsWith('*') && matchedText.endsWith('*')) {
+                    // Italic
+                    const content = matchedText.substring(1, matchedText.length - 1);
+                    parts.push(<em key={`italic-${currentIndex++}`} className="italic">{content}</em>);
+                  }
+
+                  lastIndex = regex.lastIndex;
+                }
+
+                // Add remaining text
+                if (lastIndex < text.length) {
+                  parts.push(<span key={`text-${currentIndex++}`}>{text.substring(lastIndex)}</span>);
+                }
+
+                return parts.length > 0 ? parts : [<span key="text">{text}</span>];
+              };
+
+              lines.forEach((line, index) => {
+                const trimmedLine = line.trim();
+                
+                // Headers
+                if (trimmedLine.startsWith('#### ')) {
+                  flushParagraph();
                   flushList();
+                  flushNumberedList();
                   elements.push(
-                    <h3 key={index} className="text-xl font-bold mt-4 mb-2">
-                      {line.substring(4)}
+                    <h4 key={index} className="text-lg font-bold mt-6 mb-3 text-gray-900 border-b border-gray-200 pb-2">
+                      {trimmedLine.substring(5)}
+                    </h4>
+                  );
+                } else if (trimmedLine.startsWith('### ')) {
+                  flushParagraph();
+                  flushList();
+                  flushNumberedList();
+                  elements.push(
+                    <h3 key={index} className="text-xl font-bold mt-8 mb-4 text-gray-900">
+                      {trimmedLine.substring(4)}
                     </h3>
                   );
-                } else if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
-                  currentList.push(line.substring(2).trim());
-                } else if (line.trim() === '') {
+                } else if (trimmedLine.startsWith('## ')) {
+                  flushParagraph();
                   flushList();
-                  elements.push(<br key={index} />);
-                } else {
-                  flushList();
-                  // Handle bold text
-                  const parts = line.split(/(\*\*.*?\*\*)/g);
+                  flushNumberedList();
                   elements.push(
-                    <p key={index} className="mb-3">
-                      {parts.map((part, partIndex) => {
-                        if (part.startsWith('**') && part.endsWith('**')) {
-                          return (
-                            <strong key={partIndex}>
-                              {part.substring(2, part.length - 2)}
-                            </strong>
-                          );
-                        }
-                        return <span key={partIndex}>{part}</span>;
-                      })}
-                    </p>
+                    <h2 key={index} className="text-2xl font-bold mt-10 mb-5 text-gray-900 border-b-2 border-primary-200 pb-3">
+                      {trimmedLine.substring(3)}
+                    </h2>
+                  );
+                } else if (trimmedLine.startsWith('# ')) {
+                  flushParagraph();
+                  flushList();
+                  flushNumberedList();
+                  elements.push(
+                    <h1 key={index} className="text-3xl font-bold mt-10 mb-6 text-gray-900">
+                      {trimmedLine.substring(2)}
+                    </h1>
                   );
                 }
+                // Numbered lists
+                else if (/^\d+\.\s/.test(trimmedLine)) {
+                  flushParagraph();
+                  flushList();
+                  const content = trimmedLine.replace(/^\d+\.\s/, '');
+                  currentNumberedList.push(content);
+                }
+                // Bullet lists
+                else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
+                  flushParagraph();
+                  flushNumberedList();
+                  const content = trimmedLine.substring(2);
+                  currentList.push(content);
+                }
+                // Empty line
+                else if (trimmedLine === '') {
+                  flushParagraph();
+                  flushList();
+                  flushNumberedList();
+                  // Don't add extra spacing if we just flushed content
+                }
+                // Regular paragraph text
+                else {
+                  flushList();
+                  flushNumberedList();
+                  if (!inParagraph) {
+                    inParagraph = true;
+                    paragraphLines = [trimmedLine];
+                  } else {
+                    paragraphLines.push(trimmedLine);
+                  }
+                }
               });
+
+              // Flush any remaining content
+              flushParagraph();
               flushList();
+              flushNumberedList();
+
               return elements;
             })()}
           </div>

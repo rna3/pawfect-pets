@@ -5,6 +5,9 @@ import { formatDuration } from '../utils/date';
 
 interface ServiceCardProps extends Service {}
 
+const formatCategoryLabel = (category: string) =>
+  category.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
 const ServiceCard = ({ id, name, description, price, duration, image, category }: ServiceCardProps) => {
 
   return (
@@ -16,7 +19,7 @@ const ServiceCard = ({ id, name, description, price, duration, image, category }
       />
       <div className={serviceCardStyles.content}>
         <div className={serviceCardStyles.header}>
-          <span className={serviceCardStyles.category}>{category}</span>
+          <span className={serviceCardStyles.category}>{formatCategoryLabel(category)}</span>
           <span className={serviceCardStyles.duration}>{formatDuration(duration)}</span>
         </div>
         <h3 className={serviceCardStyles.title}>{name}</h3>

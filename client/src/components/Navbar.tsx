@@ -30,12 +30,6 @@ const Navbar = () => {
               Home
             </Link>
             <Link
-              to="/shop"
-              className={navbarStyles.navLink}
-            >
-              Shop
-            </Link>
-            <Link
               to="/services"
               className={navbarStyles.navLink}
             >

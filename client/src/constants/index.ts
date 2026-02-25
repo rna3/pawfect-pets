@@ -5,7 +5,7 @@ export const SERVICE_CATEGORIES = {
   BOARDING: 'boarding',
   TRAINING: 'training',
   GROOMING: 'grooming',
-  OTHER: 'other',
+  PET_SITTING: 'pet_sitting',
 } as const;
 
 export type ServiceCategory = typeof SERVICE_CATEGORIES[keyof typeof SERVICE_CATEGORIES];

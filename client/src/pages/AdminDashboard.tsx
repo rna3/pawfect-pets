@@ -375,7 +375,7 @@ const AdminDashboard = () => {
                   <option value="boarding">Boarding</option>
                   <option value="training">Training</option>
                   <option value="grooming">Grooming</option>
-                  <option value="other">Other</option>
+                  <option value="pet_sitting">Pet Sitting</option>
                 </select>
               </div>
               <div className={adminDashboardStyles.formButtons}>

@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import Shop from './pages/Shop';
 import Services from './pages/Services';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
@@ -29,7 +28,6 @@ function App() {
             <main className="flex-grow">
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/shop" element={<Shop />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/training-guide" element={<TrainingGuide />} />
                 <Route path="/login" element={<Login />} />

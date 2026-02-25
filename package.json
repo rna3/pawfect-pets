@@ -11,7 +11,9 @@
     "build": "npm run server:build && npm run client:build",
     "install:all": "npm install && cd server && npm install && cd ../client && npm install",
     "test": "cd server && npm test",
-    "test:client": "cd client && npm test"
+    "test:client": "cd client && npm test",
+    "db:seed": "cd server && npm run db:seed",
+    "db:migrate": "cd server && npm run db:migrate"
   },
   "keywords": [
     "pets",

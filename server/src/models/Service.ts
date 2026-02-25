@@ -8,7 +8,7 @@ interface ServiceAttributes {
   price: number;
   duration: number; // in minutes
   image: string;
-  category: 'walking' | 'boarding' | 'training' | 'grooming' | 'other';
+  category: 'walking' | 'boarding' | 'training' | 'grooming' | 'pet_sitting';
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -22,7 +22,7 @@ class Service extends Model<ServiceAttributes, ServiceCreationAttributes> implem
   public price!: number;
   public duration!: number;
   public image!: string;
-  public category!: 'walking' | 'boarding' | 'training' | 'grooming' | 'other';
+  public category!: 'walking' | 'boarding' | 'training' | 'grooming' | 'pet_sitting';
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -66,7 +66,7 @@ Service.init(
       defaultValue: 'https://via.placeholder.com/300',
     },
     category: {
-      type: DataTypes.ENUM('walking', 'boarding', 'training', 'grooming', 'other'),
+      type: DataTypes.ENUM('walking', 'boarding', 'training', 'grooming', 'pet_sitting'),
       allowNull: false,
     },
   },

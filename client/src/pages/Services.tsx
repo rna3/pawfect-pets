@@ -73,6 +73,11 @@ const Services = () => {
 
   const categories = ['all', ...new Set(services.map((s) => s.category))];
 
+  const categoryLabel = (category: string) => {
+    if (category === 'all') return 'All';
+    return category.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  };
+
   // This function is called when clicking "Book Now" from ServiceCard
   // The ServiceCard already navigates to /services?book=id, so we handle it in useEffect
 
@@ -130,7 +135,7 @@ const Services = () => {
             onClick={() => setCategoryFilter(category)}
             className={servicesStyles.categoryButton(categoryFilter === category)}
           >
-            {category.charAt(0).toUpperCase() + category.slice(1)}
+            {categoryLabel(category)}
           </button>
         ))}
       </div>
