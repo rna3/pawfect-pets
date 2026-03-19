@@ -66,6 +66,14 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
+  itemType?: 'product' | 'service';
+  bookingDetails?: {
+    serviceId: number;
+    date: string;
+    time: string;
+    endDate?: string;
+    notes?: string;
+  };
 }
 
 // API Request/Response Types
@@ -144,6 +152,19 @@ export interface TrainingGuideRequest extends PetProfile {}
 
 export interface TrainingGuideResponse {
   guide: string;
+}
+
+export interface CalendarAvailabilitySlot {
+  start: string;
+  end: string;
+  date: string;
+  time: string;
+}
+
+export interface CalendarAvailabilityResponse {
+  timezone: string;
+  calendarEmbedUrl: string;
+  slots: CalendarAvailabilitySlot[];
 }
 
 

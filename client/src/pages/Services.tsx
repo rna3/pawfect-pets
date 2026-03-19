@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getServices, createBooking } from '../utils/api';
+import { getServices, getCalendarAvailability } from '../utils/api';
 import ServiceCard from '../components/ServiceCard';
-import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import { servicesStyles } from '../styles/Services.styles';
 import { commonStyles } from '../styles/common';
-import { Service } from '../types';
+import { CalendarAvailabilitySlot, Service } from '../types';
 import { validateBooking } from '../utils/validation';
 import { getTodayISO } from '../utils/date';
+import { useCart } from '../context/CartContext';
 
 const Services = () => {
   const [services, setServices] = useState<Service[]>([]);
@@ -22,7 +22,11 @@ const Services = () => {
   const [bookingNotes, setBookingNotes] = useState('');
   const [bookingEndDate, setBookingEndDate] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const { user } = useAuth();
+  const [availabilityLoading, setAvailabilityLoading] = useState(false);
+  const [availabilityError, setAvailabilityError] = useState<string | null>(null);
+  const [calendarEmbedUrl, setCalendarEmbedUrl] = useState('');
+  const [availableSlots, setAvailableSlots] = useState<CalendarAvailabilitySlot[]>([]);
+  const { addServiceBooking, openCart } = useCart();
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -46,15 +50,11 @@ const Services = () => {
     if (bookId && services.length > 0) {
       const service = services.find((s) => s.id === parseInt(bookId));
       if (service) {
-        if (!user) {
-          toast.error('Please login to book a service');
-          return;
-        }
         setSelectedService(service);
         setShowBookingModal(true);
       }
     }
-  }, [searchParams, services, user]);
+  }, [searchParams, services]);
 
   useEffect(() => {
     // Reset end date when switching away from boarding so form stays clean.
@@ -81,6 +81,37 @@ const Services = () => {
   // This function is called when clicking "Book Now" from ServiceCard
   // The ServiceCard already navigates to /services?book=id, so we handle it in useEffect
 
+  const fetchAvailability = async (serviceId: number) => {
+    const today = getTodayISO();
+    const toDate = new Date();
+    toDate.setDate(toDate.getDate() + 21);
+    const to = toDate.toISOString().slice(0, 10);
+
+    setAvailabilityLoading(true);
+    setAvailabilityError(null);
+    try {
+      const response = await getCalendarAvailability(serviceId, today, to);
+      setCalendarEmbedUrl(response.data.calendarEmbedUrl);
+      setAvailableSlots(response.data.slots);
+    } catch (error: any) {
+      setAvailabilityError(error.response?.data?.error || 'Failed to load calendar availability');
+      setAvailableSlots([]);
+    } finally {
+      setAvailabilityLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showBookingModal && selectedService) {
+      fetchAvailability(selectedService.id);
+    }
+  }, [showBookingModal, selectedService]);
+
+  const handleSelectSlot = (slot: CalendarAvailabilitySlot) => {
+    setBookingDate(slot.date);
+    setBookingTime(slot.time);
+  };
+
   const handleSubmitBooking = async () => {
     if (!selectedService || !bookingDate || !bookingTime) {
       toast.error('Please fill in all required fields');
@@ -101,21 +132,31 @@ const Services = () => {
 
     setSubmitting(true);
     try {
-      await createBooking({
-        serviceId: selectedService.id,
-        date: bookingDate,
-        time: bookingTime,
-        notes: bookingNotes,
-        endDate: bookingEndDate || undefined,
+      addServiceBooking({
+        id: Date.now(),
+        name: `${selectedService.name} Booking`,
+        price: Number(selectedService.price),
+        image: selectedService.image,
+        bookingDetails: {
+          serviceId: selectedService.id,
+          date: bookingDate,
+          time: bookingTime,
+          notes: bookingNotes || undefined,
+          endDate: bookingEndDate || undefined,
+        },
       });
-      toast.success('Booking created successfully!');
+      toast.success('Service added to cart. Complete checkout to finalize your booking.');
       setShowBookingModal(false);
+      openCart();
       setBookingDate('');
       setBookingTime('');
       setBookingNotes('');
       setBookingEndDate('');
+      setAvailabilityError(null);
+      setAvailableSlots([]);
+      setCalendarEmbedUrl('');
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to create booking');
+      toast.error(error.response?.data?.error || 'Failed to add booking to cart');
     } finally {
       setSubmitting(false);
     }
@@ -159,6 +200,46 @@ const Services = () => {
           <div className={servicesStyles.modalContent}>
             <h2 className={servicesStyles.modalTitle}>Book {selectedService.name}</h2>
             <div className={servicesStyles.formField}>
+              <div>
+                <label className={servicesStyles.label}>Live Availability Calendar</label>
+                {calendarEmbedUrl ? (
+                  <iframe
+                    src={calendarEmbedUrl}
+                    title="Google Calendar Availability"
+                    className={servicesStyles.calendarFrame}
+                  />
+                ) : (
+                  <div className={servicesStyles.calendarFallback}>
+                    Calendar preview unavailable right now.
+                  </div>
+                )}
+              </div>
+              <div>
+                <label className={servicesStyles.label}>Available Time Slots</label>
+                {availabilityLoading ? (
+                  <div className={commonStyles.textLoading}>Loading available slots...</div>
+                ) : availabilityError ? (
+                  <div className={servicesStyles.availabilityError}>{availabilityError}</div>
+                ) : availableSlots.length === 0 ? (
+                  <div className={commonStyles.textEmpty}>No available slots in the next 3 weeks.</div>
+                ) : (
+                  <div className={servicesStyles.slotGrid}>
+                    {availableSlots.slice(0, 30).map((slot) => {
+                      const isSelected = bookingDate === slot.date && bookingTime === slot.time;
+                      return (
+                        <button
+                          key={`${slot.start}-${slot.end}`}
+                          type="button"
+                          className={servicesStyles.slotButton(isSelected)}
+                          onClick={() => handleSelectSlot(slot)}
+                        >
+                          {slot.date} at {slot.time}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
               <div>
                 <label className={servicesStyles.label}>Date *</label>
                 <input
@@ -220,7 +301,7 @@ const Services = () => {
                   disabled={submitting}
                   className={servicesStyles.submitButton}
                 >
-                  {submitting ? 'Booking...' : 'Book Now'}
+                  {submitting ? 'Adding...' : 'Add to Cart'}
                 </button>
               </div>
             </div>

@@ -1,5 +1,3 @@
-import { commonStyles } from './common';
-
 export const cartSidebarStyles = {
   overlay: 'fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-200',
   sidebar: (animateIn: boolean) => 
@@ -16,6 +14,7 @@ export const cartSidebarStyles = {
   itemDetails: 'flex-1 min-w-0',
   itemName: 'font-semibold mb-1',
   itemPrice: 'text-gray-600 mb-2',
+  serviceMeta: 'text-xs text-gray-600 mb-2 space-y-1',
   quantityControls: 'flex items-center space-x-2 mb-2',
   quantityButton: 'w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 transition-colors',
   quantityDisplay: 'w-10 text-center font-medium',

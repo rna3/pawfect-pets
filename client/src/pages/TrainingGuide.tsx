@@ -4,9 +4,6 @@ import { toast } from 'react-toastify';
 import { trainingGuideStyles } from '../styles/TrainingGuide.styles';
 import {
   PetProfile,
-  EnergyLevel,
-  Environment,
-  ExperienceLevel,
 } from '../types';
 
 // Dropdown options for quick selection

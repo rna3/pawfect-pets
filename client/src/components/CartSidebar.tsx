@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useCart } from '../context/CartContext';
-import { createOrder } from '../utils/api';
+import { createBooking, createOrder } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { cartSidebarStyles } from '../styles/CartSidebar.styles';
 
@@ -51,14 +51,35 @@ const CartSidebar = () => {
 
     setCheckingOut(true);
     try {
-      const orderItems = items.map((item) => ({
-        productId: item.id,
-        quantity: item.quantity,
-      }));
+      const productItems = items.filter((item) => (item.itemType || 'product') === 'product');
+      const serviceItems = items.filter((item) => item.itemType === 'service');
 
-      await createOrder(orderItems);
+      if (serviceItems.length > 0) {
+        for (const item of serviceItems) {
+          if (!item.bookingDetails) {
+            throw new Error(`Missing booking details for ${item.name}`);
+          }
+
+          await createBooking({
+            serviceId: item.bookingDetails.serviceId,
+            date: item.bookingDetails.date,
+            time: item.bookingDetails.time,
+            notes: item.bookingDetails.notes,
+            endDate: item.bookingDetails.endDate,
+          });
+        }
+      }
+
+      if (productItems.length > 0) {
+        const orderItems = productItems.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+        }));
+        await createOrder({ items: orderItems });
+      }
+
       clearCart();
-      toast.success('Order placed successfully!');
+      toast.success('Checkout complete! Your booking/order has been finalized.');
       closeWithAnimation();
       navigate('/dashboard');
     } catch (error: any) {
@@ -97,26 +118,35 @@ const CartSidebar = () => {
                   <div className={cartSidebarStyles.itemDetails}>
                     <h3 className={cartSidebarStyles.itemName}>{item.name}</h3>
                     <p className={cartSidebarStyles.itemPrice}>${item.price.toFixed(2)}</p>
-                    
-                    {/* Quantity Controls */}
-                    <div className={cartSidebarStyles.quantityControls}>
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className={cartSidebarStyles.quantityButton}
-                        aria-label="Decrease quantity"
-                      >
-                        −
-                      </button>
-                      <span className={cartSidebarStyles.quantityDisplay}>{item.quantity}</span>
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className={cartSidebarStyles.quantityButton}
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
-                    </div>
-                    
+
+                    {item.itemType === 'service' && item.bookingDetails ? (
+                      <div className={cartSidebarStyles.serviceMeta}>
+                        <p><strong>Date:</strong> {item.bookingDetails.date}</p>
+                        <p><strong>Time:</strong> {item.bookingDetails.time}</p>
+                        {item.bookingDetails.endDate ? (
+                          <p><strong>End Date:</strong> {item.bookingDetails.endDate}</p>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <div className={cartSidebarStyles.quantityControls}>
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          className={cartSidebarStyles.quantityButton}
+                          aria-label="Decrease quantity"
+                        >
+                          −
+                        </button>
+                        <span className={cartSidebarStyles.quantityDisplay}>{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className={cartSidebarStyles.quantityButton}
+                          aria-label="Increase quantity"
+                        >
+                          +
+                        </button>
+                      </div>
+                    )}
+
                     {/* Remove Button */}
                     <button
                       onClick={() => removeItem(item.id)}

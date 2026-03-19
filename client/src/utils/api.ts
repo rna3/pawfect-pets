@@ -4,7 +4,6 @@ import {
   Service,
   Order,
   Booking,
-  ApiResponse,
   CreateProductRequest,
   UpdateProductRequest,
   CreateServiceRequest,
@@ -14,6 +13,7 @@ import {
   CreateOrderRequest,
   TrainingGuideRequest,
   TrainingGuideResponse,
+  CalendarAvailabilityResponse,
 } from '../types';
 import { STORAGE_KEYS } from '../constants';
 
@@ -98,3 +98,11 @@ export const generateTrainingGuide = (
   data: TrainingGuideRequest
 ): Promise<AxiosResponse<TrainingGuideResponse>> =>
   api.post('/training-guide', data);
+
+// Calendar availability API
+export const getCalendarAvailability = (
+  serviceId: number,
+  from: string,
+  to: string
+): Promise<AxiosResponse<CalendarAvailabilityResponse>> =>
+  api.get('/calendar/availability', { params: { serviceId, from, to } });

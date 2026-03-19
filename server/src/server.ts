@@ -10,6 +10,7 @@ import serviceRoutes from './routes/services';
 import orderRoutes from './routes/orders';
 import bookingRoutes from './routes/bookings';
 import trainingGuideRoutes from './routes/trainingGuide';
+import calendarRoutes from './routes/calendar';
 
 // Import models to establish relationships
 import './models';
@@ -34,6 +35,7 @@ app.use('/api/services', serviceRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/training-guide', trainingGuideRoutes);
+app.use('/api/calendar', calendarRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
