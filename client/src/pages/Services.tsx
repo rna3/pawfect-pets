@@ -197,7 +197,8 @@ const Services = () => {
       {/* Booking Modal */}
       {showBookingModal && selectedService && (
         <div className={servicesStyles.modalOverlay}>
-          <div className={servicesStyles.modalContent}>
+          <div className={servicesStyles.modalOverlayInner}>
+            <div className={servicesStyles.modalContent}>
             <h2 className={servicesStyles.modalTitle}>Book {selectedService.name}</h2>
             <div className={servicesStyles.formField}>
               <div>
@@ -305,6 +306,7 @@ const Services = () => {
                 </button>
               </div>
             </div>
+          </div>
           </div>
         </div>
       )}

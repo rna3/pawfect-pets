@@ -18,6 +18,7 @@ export const adminDashboardStyles = {
   editButton: commonStyles.buttonEdit,
   deleteButton: commonStyles.buttonDanger,
   modalOverlay: commonStyles.modalOverlay,
+  modalOverlayInner: commonStyles.modalOverlayInner,
   modalContent: commonStyles.modalContent,
   modalTitle: 'text-2xl font-bold mb-4',
   form: 'space-y-4',

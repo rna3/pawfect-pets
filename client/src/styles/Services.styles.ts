@@ -8,6 +8,7 @@ export const servicesStyles = {
     `${commonStyles.categoryButton} ${isActive ? commonStyles.categoryButtonActive : commonStyles.categoryButtonInactive}`,
   servicesGrid: commonStyles.gridServices,
   modalOverlay: commonStyles.modalOverlay,
+  modalOverlayInner: commonStyles.modalOverlayInner,
   modalContent: commonStyles.modalContent,
   modalTitle: 'text-2xl font-bold mb-4',
   formField: 'space-y-4',

@@ -34,6 +34,7 @@ export const dashboardStyles = {
   itemQuantity: 'text-gray-600',
   itemPrice: 'font-semibold',
   modalOverlay: commonStyles.modalOverlay,
+  modalOverlayInner: commonStyles.modalOverlayInner,
   modalContent: commonStyles.modalContentLarge,
   modalTitle: 'text-2xl font-bold mb-4',
   modalForm: 'space-y-4',

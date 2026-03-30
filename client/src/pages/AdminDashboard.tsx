@@ -215,6 +215,7 @@ const AdminDashboard = () => {
       {/* Product Modal */}
       {showProductModal && (
         <div className={adminDashboardStyles.modalOverlay}>
+          <div className={adminDashboardStyles.modalOverlayInner}>
           <div className={adminDashboardStyles.modalContent}>
             <h2 className={adminDashboardStyles.modalTitle}>
               {editingProduct ? 'Edit Product' : 'Add Product'}
@@ -301,12 +302,14 @@ const AdminDashboard = () => {
               </div>
             </form>
           </div>
+          </div>
         </div>
       )}
 
       {/* Service Modal */}
       {showServiceModal && (
         <div className={adminDashboardStyles.modalOverlay}>
+          <div className={adminDashboardStyles.modalOverlayInner}>
           <div className={adminDashboardStyles.modalContent}>
             <h2 className={adminDashboardStyles.modalTitle}>
               {editingService ? 'Edit Service' : 'Add Service'}
@@ -398,6 +401,7 @@ const AdminDashboard = () => {
                 </button>
               </div>
             </form>
+          </div>
           </div>
         </div>
       )}

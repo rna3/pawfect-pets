@@ -42,10 +42,13 @@ export const commonStyles = {
   linkPrimary: 'text-primary-600 hover:text-primary-700 font-semibold',
   linkNav: 'hover:text-primary-200 transition-colors',
   
-  // Modal/Overlay styles
-  modalOverlay: 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center',
-  modalContent: 'bg-white rounded-lg p-6 max-w-md w-full mx-4',
-  modalContentLarge: 'bg-white rounded-lg p-6 w-full max-w-lg mx-4 shadow-xl',
+  // Modal/Overlay styles — outer scrolls when content exceeds viewport; inner centers when it fits
+  modalOverlay:
+    'fixed inset-0 bg-black bg-opacity-50 z-50 overflow-y-auto overflow-x-hidden',
+  modalOverlayInner:
+    'flex min-h-screen items-center justify-center p-4 sm:p-6',
+  modalContent: 'bg-white rounded-lg p-6 w-full max-w-md',
+  modalContentLarge: 'bg-white rounded-lg p-6 w-full max-w-lg shadow-xl',
   
   // Status badges
   statusConfirmed: 'bg-green-100 text-green-800',

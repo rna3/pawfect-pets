@@ -243,6 +243,7 @@ const Dashboard = () => {
             }
           }}
         >
+          <div className={dashboardStyles.modalOverlayInner}>
           <div
             className={dashboardStyles.modalContent}
             onClick={(e) => e.stopPropagation()}
@@ -312,6 +313,7 @@ const Dashboard = () => {
                 {savingEdit ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
+          </div>
           </div>
         </div>
       )}
